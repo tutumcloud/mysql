@@ -13,6 +13,9 @@ echo "   Started with PID $!"
 echo "=> Setting root password"
 mysqladmin -uroot password "$1"
 
+echo "=> Allowing root external access"
+mysql -uroot -p"$1" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$1' WITH GRANT OPTION"
+
 echo "=> Stopping MySQL Server"
 mysqladmin -uroot -p"$1" shutdown
 
