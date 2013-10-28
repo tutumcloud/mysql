@@ -4,7 +4,7 @@ MAINTAINER Fernando Mayo <fernando@tutum.co>
 # Install packages
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server
+RUN ! DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server
 
 # Add image configuration and scripts
 ADD ./start.sh /start.sh
