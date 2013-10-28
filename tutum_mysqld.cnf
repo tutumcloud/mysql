@@ -1,0 +1,2 @@
+[mysqld]
+bind-addres=0.0.0.0
