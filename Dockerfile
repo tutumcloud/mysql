@@ -12,5 +12,5 @@ RUN chmod 755 /start.sh
 ADD ./run.sh /run.sh
 RUN chmod 755 /run.sh
 ADD ./supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
-ADD ./tutum_mysqld.conf /etc/mysql/conf.d/tutum_mysqld.conf
+ADD ./tutum_mysqld.cnf /etc/mysql/conf.d/tutum_mysqld.cnf
 ADD ./set_root_pw.sh /set_root_pw.sh
