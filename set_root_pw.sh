@@ -7,11 +7,15 @@ fi
 
 echo "=> Starting MySQL Server"
 /usr/bin/mysqld_safe > /dev/null 2>&1 &
-sleep 5
 echo "   Started with PID $!"
 
 echo "=> Setting root password"
-mysqladmin -uroot password "$1"
+RET=1
+while [[ RET -ne 0 ]]; do
+	sleep 5
+	mysqladmin -uroot password "$1"
+	RET=$?
+done
 
 echo "=> Allowing root external access"
 mysql -uroot -p"$1" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$1' WITH GRANT OPTION"
