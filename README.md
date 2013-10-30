@@ -46,6 +46,20 @@ You can now push your changes to the registry:
 	sudo docker push tutum/my-mysql-server
 
 
+Migrating an existing MySQL Server
+----------------------------------
+
+In order to migrate your current MySQL server to a docker, perform the following commands from your current server:
+
+To dump your databases structure:
+
+	mysqldump -u<user> -p --opt -d -B <database(s)> > dbserver_schema.sql
+
+To dump your database data:
+
+	mysqldump -u<user> -p --quick --single-transaction -t -n -B <database(s) > dbserver_data.sql
+
+
 Running the MySQL server
 ------------------------
 
