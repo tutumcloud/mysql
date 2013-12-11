@@ -17,7 +17,7 @@ ADD ./set_root_pw.sh /set_root_pw.sh
 RUN chmod 755 /set_root_pw.sh
 ADD ./import_sql.sh /import_sql.sh
 RUN chmod 755 /import_sql.sh
-RUN /set_root_pw "changeme!now!"
+RUN /set_root_pw.sh "changeme!now!"
 
 EXPOSE 3306
 CMD ["/run.sh"]
