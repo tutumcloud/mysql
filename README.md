@@ -7,9 +7,11 @@ Base docker image to run a MySQL database server
 Usage
 -----
 
-To create the image `tutum/docker-mysql`, execute the following command on the tutum-docker-mysql folder:
+To create the image `tutum/mysql`, execute the following command on the tutum-mysql folder:
 
-	sudo docker build -t tutum/docker-mysql .
+	sudo docker build -t tutum/mysql .
+
+The default password is `changeme!now!`
 
 
 Mounting the database file volume
@@ -29,7 +31,7 @@ Initializing the server
 
 To set your initial root password, run:
 
-	ID=$(sudo docker run -d tutum/docker-mysql /bin/bash -c "/set_root_pw.sh <newpassword>")
+	ID=$(sudo docker run -d tutum/mysql /bin/bash -c "/set_root_pw.sh <newpassword>")
 
 Where `<newpassword>` is the password to be set for the root account. It will store the new container ID (like `d35bf1374e88`) in $ID. To create an image from that, execute:
 
