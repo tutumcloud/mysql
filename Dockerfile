@@ -8,16 +8,12 @@ RUN ! DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server
 
 # Add image configuration and scripts
 ADD ./start.sh /start.sh
-RUN chmod 755 /start.sh
 ADD ./run.sh /run.sh
-RUN chmod 755 /run.sh
 ADD ./supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
-ADD ./tutum_mysqld.cnf /etc/mysql/conf.d/tutum_mysqld.cnf
-ADD ./set_root_pw.sh /set_root_pw.sh
-RUN chmod 755 /set_root_pw.sh
+ADD ./my.cnf /etc/mysql/conf.d/my.cnf
+ADD ./create_mysql_admin_user.sh /create_mysql_admin_user.sh
 ADD ./import_sql.sh /import_sql.sh
-RUN chmod 755 /import_sql.sh
-RUN /set_root_pw.sh "changeme!now!"
+RUN chmod 755 /*.sh
 
 EXPOSE 3306
 CMD ["/run.sh"]
