@@ -1,2 +1,2 @@
 #!/bin/bash
-mysqld_safe
+exec mysqld_safe
