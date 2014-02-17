@@ -2,9 +2,7 @@ FROM ubuntu:quantal
 MAINTAINER Fernando Mayo <fernando@tutum.co>
 
 # Install packages
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN ! DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server pwgen
+RUN apt-get update && apt-get -y upgrade && ! DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server pwgen
 
 # Add image configuration and scripts
 ADD https://raw.github.com/tutumcloud/tutum-docker-mysql/master/start.sh /start.sh
