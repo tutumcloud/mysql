@@ -7,8 +7,9 @@ fi
 
 /usr/bin/mysqld_safe > /dev/null 2>&1 &
 
-PASS=$(pwgen -s 12 1)
-echo "=> Creating MySQL admin user with random password"
+PASS=${MYSQL_PASS:-$(pwgen -s 12 1)}
+_word=$( [ ${MYSQL_PASS} ] && echo "preset" || echo "random" )
+echo "=> Creating MySQL admin user with ${_word} password"
 RET=1
 while [[ RET -ne 0 ]]; do
 	sleep 5
