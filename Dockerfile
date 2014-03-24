@@ -1,8 +1,9 @@
-FROM ubuntu:quantal
+FROM ubuntu:saucy
 MAINTAINER Fernando Mayo <fernando@tutum.co>
 
 # Install packages
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server pwgen
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor mysql-server pwgen
 
 # Add image configuration and scripts
 ADD start.sh /start.sh
