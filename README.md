@@ -72,6 +72,10 @@ After this you can start your mysql image but this time using `/path/in/host` as
 
 	docker run -d -p 3306:3306 -v /path/in/host:/var/lib/mysql tutum/mysql
 
+If you don't want to create an admin user or the admin user has been created in the database file volume, you can set `MYSQL_ADMIN_CREATED` (any value will work) to skip the admin user creation:
+	
+	docker run -d -p 3306:3306 -v /path/in/host:/var/lib/mysql -e MYSQL_ADMIN_CREATED=True tutum/mysql
+
 
 Migrating an existing MySQL Server
 ----------------------------------
@@ -91,3 +95,11 @@ To import a SQL backup which is stored for example in the folder `/tmp` in the h
 	sudo docker run -d -v /tmp:/tmp tutum/mysql /bin/bash -c "/import_sql.sh <rootpassword> /tmp/<dump.sql>")
 
 Where `<rootpassword>` is the root password set earlier and `<dump.sql>` is the name of the SQL file to be imported.
+
+
+Environment variables
+---------------------
+
+`MYSQL_PASS`: Set a specific password for the admin account.
+
+`MYSQL_ADMIN_CREATED`: When setting this environment to any value, MySQL container will NOT create admin user and its password.
