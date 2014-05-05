@@ -1,4 +1,4 @@
-FROM ubuntu:saucy
+FROM ubuntu:trusty
 MAINTAINER Fernando Mayo <fernando@tutum.co>
 
 # Install packages
