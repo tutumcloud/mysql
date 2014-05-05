@@ -10,6 +10,7 @@ ADD start.sh /start.sh
 ADD run.sh /run.sh
 ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
 ADD my.cnf /etc/mysql/conf.d/my.cnf
+ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 ADD import_sql.sh /import_sql.sh
 RUN chmod 755 /*.sh
