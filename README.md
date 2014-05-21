@@ -9,6 +9,9 @@ MySQL version
 
 `master` branch maintains MySQL from Ubuntu trusty official source. If you want to get different version of MySQL, please checkout `5.5` branch and `5.6` branch.
 
+If you want to use MariaDB, please check our `tutum/mariadb` image: https://github.com/tutumcloud/tutum-docker-mariadb
+
+
 Usage
 -----
 
@@ -118,3 +121,8 @@ Environment variables
 ---------------------
 
 `MYSQL_PASS`: Set a specific password for the admin account.
+
+Compatibliity Issues
+--------------------
+
+- Volume created by MySQL 5.6 cannot be used in MySQL 5.5 Images or MariaDB images
