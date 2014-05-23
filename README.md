@@ -121,3 +121,8 @@ Environment variables
 ---------------------
 
 `MYSQL_PASS`: Set a specific password for the admin account.
+
+Compatibliity Issues
+--------------------
+
+- Volume created by MySQL 5.6 cannot be used in MySQL 5.5 Images or MariaDB images
