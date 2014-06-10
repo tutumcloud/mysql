@@ -18,6 +18,9 @@ ADD import_sql.sh /import_sql.sh
 ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 
+# Exposed ENV
+ENV MYSQL_PASS **Random**
+
 # Add VOLUMEs to allow backup of config and databases
 VOLUME  ["/etc/mysql", "/var/lib/mysql"]
 
