@@ -11,9 +11,9 @@ sleep 5
 echo "   Started with PID $!"
 
 echo "=> Importing SQL file"
-mysql -uroot -p"$1" < "$2"
+mysql -uadmin -p"$1" < "$2"
 
 echo "=> Stopping MySQL Server"
-mysqladmin -uroot -p"$1" shutdown
+mysqladmin -uadmin -p"$1" shutdown
 
 echo "=> Done!"
