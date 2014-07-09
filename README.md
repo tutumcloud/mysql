@@ -63,6 +63,8 @@ You can now test your deployment:
 
 	mysql -uadmin -p"mypass"
 
+The admin username can also be set via the MYSQL_USER environment variable.
+
 
 Mounting the database file volume
 ---------------------------------
@@ -120,6 +122,7 @@ Where `<rootpassword>` is the root password set earlier and `<dump.sql>` is the 
 Environment variables
 ---------------------
 
+`MYSQL_USER`: Set a specific username for the admin account (default 'admin')
 `MYSQL_PASS`: Set a specific password for the admin account.
 
 Compatibliity Issues
