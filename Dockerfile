@@ -19,6 +19,7 @@ ADD run.sh /run.sh
 RUN chmod 755 /*.sh
 
 # Exposed ENV
+ENV MYSQL_USER admin
 ENV MYSQL_PASS **Random**
 
 # Add VOLUMEs to allow backup of config and databases
