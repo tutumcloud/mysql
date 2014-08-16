@@ -7,9 +7,7 @@ Base docker image to run a MySQL database server
 MySQL version
 -------------
 
-`master` branch maintains MySQL from Ubuntu trusty official source. If you want to get different version of MySQL, please checkout `5.5` branch and `5.6` branch.
-
-If you want to use MariaDB, please check our `tutum/mariadb` image: https://github.com/tutumcloud/tutum-docker-mariadb
+Different versions are built from different folders. If you want to use MariaDB, please check our `tutum/mariadb` image: https://github.com/tutumcloud/tutum-docker-mariadb
 
 
 Usage
@@ -17,7 +15,7 @@ Usage
 
 To create the image `tutum/mysql`, execute the following command on the tutum-mysql folder:
 
-	docker build -t tutum/mysql .
+	docker build -t tutum/mysql 5.5/
 
 To run the image and bind to port 3306:
 
