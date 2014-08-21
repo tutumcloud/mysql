@@ -7,8 +7,17 @@ fi
 
 echo "=> Starting MySQL Server"
 /usr/bin/mysqld_safe > /dev/null 2>&1 &
-sleep 5
-echo "   Started with PID $!"
+PID=$!
+
+RET=1
+while [[ RET -ne 0 ]]; do
+    echo "=> Waiting for confirmation of MySQL service startup"
+    sleep 5
+    mysql -u"$1" -p"$2" -e "status" > /dev/null 2>&1
+RET=$?
+done
+
+echo "   Started with PID ${PID}"
 
 echo "=> Importing SQL file"
 mysql -u"$1" -p"$2" < "$3"
