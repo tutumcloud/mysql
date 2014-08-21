@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $# -ne 2 ]]; then
-	echo "Usage: $0 <password> </path/to/sql_file.sql>"
+if [[ $# -ne 3 ]]; then
+	echo "Usage: $0 <username> <password> </path/to/sql_file.sql>"
 	exit 1
 fi
 
@@ -11,9 +11,9 @@ sleep 5
 echo "   Started with PID $!"
 
 echo "=> Importing SQL file"
-mysql -uadmin -p"$1" < "$2"
+mysql -u"$1" -p"$2" < "$3"
 
 echo "=> Stopping MySQL Server"
-mysqladmin -uadmin -p"$1" shutdown
+mysqladmin -u"$1" -p"$2" shutdown
 
 echo "=> Done!"
