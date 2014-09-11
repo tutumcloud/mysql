@@ -7,7 +7,21 @@ dependencies:
     - docker build -t mysql-5.6 5.6/
 test:
   override:
+    # test mysql 5.5
     - docker run -d -p 13306:3306 -e MYSQL_USER="user" -e MYSQL_PASS="test" mysql-5.5; sleep 20
-    - mysqladmin -uuser -ptest ping -h127.0.0.1 -P13306 | grep -c "mysqld is alive"
+    - mysqladmin -uuser -ptest -h127.0.0.1 -P13306 ping | grep -c "mysqld is alive"
+    # test mysql 5.6
     - docker run -d -p 13307:3306 -e MYSQL_USER="user" -e MYSQL_PASS="test" mysql-5.6; sleep 20
-    - mysqladmin -uuser -ptest ping -h127.0.0.1 -P13307 | grep -c "mysqld is alive"
+    - mysqladmin -uuser -ptest -h127.0.0.1 -P13307 ping | grep -c "mysqld is alive"
+    # test replication 5.5
+    - docker run -d -e MYSQL_USER=user -e MYSQL_PASS=test -e REPLICATION_MASTER=true -e REPLICATION_USER=repl -e REPLICATION_PASS=repl -p 13308:3306 --name mysql55master mysql-5.5; sleep 20
+    - docker run -d -e MYSQL_USER=user -e MYSQL_PASS=test -e REPLICATION_SLAVE=true -p 13309:3306 --link mysql55master:mysql mysql-5.5; sleep 20
+    - docker logs mysql55master | grep "repl:repl"
+    - mysql -uuser -ptest -h127.0.0.1 -P13308 -e "show master status\G;" | grep "mysql-bin.*"
+    - mysql -uuser -ptest -h127.0.0.1 -P13309 -e "show slave status\G;" | grep "Slave_IO_Running.*Yes"
+    # test replication 5.6
+    - docker run -d -e MYSQL_USER=user -e MYSQL_PASS=test -e REPLICATION_MASTER=true -e REPLICATION_USER=repl -e REPLICATION_PASS=repl -p 13310:3306 --name mysql56master mysql-5.6; sleep 20
+    - docker run -d -e MYSQL_USER=user -e MYSQL_PASS=test -e REPLICATION_SLAVE=true -p 13311:3306 --link mysql56master:mysql mysql-5.6; sleep 20
+    - docker logs mysql56master | grep "repl:repl"
+    - mysql -uuser -ptest -h127.0.0.1 -P13310 -e "show master status\G;" | grep "mysql-bin.*"
+    - mysql -uuser -ptest -h127.0.0.1 -P13311 -e "show slave status\G;" | grep "Slave_IO_Running.*Yes"
