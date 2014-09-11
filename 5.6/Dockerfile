@@ -28,7 +28,7 @@ ENV MYSQL_PASS **Random**
 ENV REPLICATION_MASTER **False**
 ENV REPLICATION_SLAVE **False**
 ENV REPLICATION_USER replica
-ENV REPLICAITON_PASS replica
+ENV REPLICATION_PASS replica
 
 # Add VOLUMEs to allow backup of config and databases
 VOLUME  ["/etc/mysql", "/var/lib/mysql"]
