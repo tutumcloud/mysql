@@ -40,8 +40,8 @@ fi
 
 # Set MySQL REPLICATION - MASTER
 if [ -n "${REPLICATION_MASTER}" ]; then 
-    echo "=> Configuring MySQL replicaiton as master ..."
-    if [ ! -f /repliation_configured ]; then
+    echo "=> Configuring MySQL replication as master ..."
+    if [ ! -f /replication_configured ]; then
         RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
         echo "=> Writting configuration file '${CONF_FILE}' with server-id=${RAND}"
         sed -i "s/^#server-id.*/server-id = ${RAND}/" ${CONF_FILE}
@@ -53,7 +53,7 @@ if [ -n "${REPLICATION_MASTER}" ]; then
         mysql -uroot -e "GRANT REPLICATION SLAVE ON *.* TO '${REPLICATION_USER}'@'%'"
         echo "=> Done!"
         mysqladmin -uroot shutdown
-        touch /repliation_configured
+        touch /replication_configured
     else
         echo "=> MySQL replication master already configured, skip"
     fi
@@ -61,9 +61,9 @@ fi
 
 # Set MySQL REPLICATION - SLAVE
 if [ -n "${REPLICATION_SLAVE}" ]; then 
-    echo "=> Configuring MySQL replicaiton as slave ..."
+    echo "=> Configuring MySQL replication as slave ..."
     if [ -n "${MYSQL_PORT_3306_TCP_ADDR}" ] && [ -n "${MYSQL_PORT_3306_TCP_PORT}" ]; then
-        if [ ! -f /repliation_configured ]; then
+        if [ ! -f /replication_configured ]; then
             RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
             echo "=> Writting configuration file '${CONF_FILE}' with server-id=${RAND}"
             sed -i "s/^#server-id.*/server-id = ${RAND}/" ${CONF_FILE}
@@ -74,9 +74,9 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
             mysql -uroot -e "CHANGE MASTER TO MASTER_HOST='${MYSQL_PORT_3306_TCP_ADDR}',MASTER_USER='${MYSQL_ENV_REPLICATION_USER}',MASTER_PASSWORD='${MYSQL_ENV_REPLICATION_PASS}',MASTER_PORT=${MYSQL_PORT_3306_TCP_PORT}, MASTER_CONNECT_RETRY=30"
             echo "=> Done!"
             mysqladmin -uroot shutdown
-            touch /repliation_configured
+            touch /replication_configured
         else
-            echo "=> MySQL replicaiton slave already configured, skip"
+            echo "=> MySQL replication slave already configured, skip"
         fi
     else 
         echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"
