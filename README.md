@@ -119,7 +119,7 @@ Where `<user>` and `<pass>` are the database username and password set earlier a
 
 Replication - Master/Slave
 -------------------------
-To use MySQL replication, please set environment variable `REPLICATION_MASTER`/`REPLICATION_SLAVE` to `ture`. Also, on master side, you may want to specify `REPLICATION_USER` and `REPLICATION_PASS` for the account to perform replication, the default value is `replica:replica`
+To use MySQL replication, please set environment variable `REPLICATION_MASTER`/`REPLICATION_SLAVE` to `true`. Also, on master side, you may want to specify `REPLICATION_USER` and `REPLICATION_PASS` for the account to perform replication, the default value is `replica:replica`
 
 Examples:
 - Master MySQL
