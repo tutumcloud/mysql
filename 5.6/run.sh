@@ -19,6 +19,35 @@ StartMySQL ()
     done
 }
 
+CreateMySQLUser()
+{
+	StartMySQL
+	if [ "$MYSQL_PASS" = "**Random**" ]; then
+	    unset MYSQL_PASS
+	fi
+
+	PASS=${MYSQL_PASS:-$(pwgen -s 12 1)}
+	_word=$( [ ${MYSQL_PASS} ] && echo "preset" || echo "random" )
+	echo "=> Creating MySQL user ${MYSQL_USER} with ${_word} password"
+
+	mysql -uroot -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '$PASS'"
+	mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION"
+
+
+	echo "=> Done!"
+
+	echo "========================================================================"
+	echo "You can now connect to this MySQL Server using:"
+	echo ""
+	echo "    mysql -u$MYSQL_USER -p$PASS -h<host> -P<port>"
+	echo ""
+	echo "Please remember to change the above password as soon as possible!"
+	echo "MySQL user 'root' has no password but only allows local connections"
+	echo "========================================================================"
+
+	mysqladmin -uroot shutdown
+}
+
 if [ ${REPLICATION_MASTER} == "**False**" ]; then
     unset REPLICATION_MASTER
 fi
@@ -36,7 +65,7 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     mysql_install_db > /dev/null 2>&1
     echo "=> Done!"  
     echo "=> Creating admin user ..."
-    /create_mysql_admin_user.sh
+    CreateMySQLUser
 else
     echo "=> Using an existing volume of MySQL"
 fi
@@ -80,7 +109,7 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
             mysqladmin -uroot shutdown
             touch /replication_configured
         else
-            echo "=> MySQL replication slave already configured, skip"
+            echo "=> MySQL replicaiton slave already configured, skip"
         fi
     else 
         echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"

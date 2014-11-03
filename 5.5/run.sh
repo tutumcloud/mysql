@@ -1,4 +1,4 @@
-#!/bin/bash
+e!/bin/bash
 
 VOLUME_HOME="/var/lib/mysql"
 CONF_FILE="/etc/mysql/conf.d/my.cnf"
@@ -19,6 +19,35 @@ StartMySQL ()
     done
 }
 
+CreateMySQLUser()
+{
+	StartMySQL
+	if [ "$MYSQL_PASS" = "**Random**" ]; then
+	    unset MYSQL_PASS
+	fi
+
+	PASS=${MYSQL_PASS:-$(pwgen -s 12 1)}
+	_word=$( [ ${MYSQL_PASS} ] && echo "preset" || echo "random" )
+	echo "=> Creating MySQL user ${MYSQL_USER} with ${_word} password"
+
+	mysql -uroot -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '$PASS'"
+	mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION"
+
+
+	echo "=> Done!"
+
+	echo "========================================================================"
+	echo "You can now connect to this MySQL Server using:"
+	echo ""
+	echo "    mysql -u$MYSQL_USER -p$PASS -h<host> -P<port>"
+	echo ""
+	echo "Please remember to change the above password as soon as possible!"
+	echo "MySQL user 'root' has no password but only allows local connections"
+	echo "========================================================================"
+
+	mysqladmin -uroot shutdown
+}
+
 if [ ${REPLICATION_MASTER} == "**False**" ]; then
     unset REPLICATION_MASTER
 fi
@@ -36,7 +65,7 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     mysql_install_db > /dev/null 2>&1
     echo "=> Done!"  
     echo "=> Creating admin user ..."
-    /create_mysql_admin_user.sh
+    CreateMySQLUser
 else
     echo "=> Using an existing volume of MySQL"
 fi
@@ -44,8 +73,8 @@ fi
 
 # Set MySQL REPLICATION - MASTER
 if [ -n "${REPLICATION_MASTER}" ]; then 
-    echo "=> Configuring MySQL replicaiton as master ..."
-    if [ ! -f /repliation_configured ]; then
+    echo "=> Configuring MySQL replication as master ..."
+    if [ ! -f /replication_configured ]; then
         RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
         echo "=> Writting configuration file '${CONF_FILE}' with server-id=${RAND}"
         sed -i "s/^#server-id.*/server-id = ${RAND}/" ${CONF_FILE}
@@ -57,7 +86,7 @@ if [ -n "${REPLICATION_MASTER}" ]; then
         mysql -uroot -e "GRANT REPLICATION SLAVE ON *.* TO '${REPLICATION_USER}'@'%'"
         echo "=> Done!"
         mysqladmin -uroot shutdown
-        touch /repliation_configured
+        touch /replication_configured
     else
         echo "=> MySQL replication master already configured, skip"
     fi
@@ -65,9 +94,9 @@ fi
 
 # Set MySQL REPLICATION - SLAVE
 if [ -n "${REPLICATION_SLAVE}" ]; then 
-    echo "=> Configuring MySQL replicaiton as slave ..."
+    echo "=> Configuring MySQL replication as slave ..."
     if [ -n "${MYSQL_PORT_3306_TCP_ADDR}" ] && [ -n "${MYSQL_PORT_3306_TCP_PORT}" ]; then
-        if [ ! -f /repliation_configured ]; then
+        if [ ! -f /replication_configured ]; then
             RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
             echo "=> Writting configuration file '${CONF_FILE}' with server-id=${RAND}"
             sed -i "s/^#server-id.*/server-id = ${RAND}/" ${CONF_FILE}
@@ -78,7 +107,7 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
             mysql -uroot -e "CHANGE MASTER TO MASTER_HOST='${MYSQL_PORT_3306_TCP_ADDR}',MASTER_USER='${MYSQL_ENV_REPLICATION_USER}',MASTER_PASSWORD='${MYSQL_ENV_REPLICATION_PASS}',MASTER_PORT=${MYSQL_PORT_3306_TCP_PORT}, MASTER_CONNECT_RETRY=30"
             echo "=> Done!"
             mysqladmin -uroot shutdown
-            touch /repliation_configured
+            touch /replication_configured
         else
             echo "=> MySQL replicaiton slave already configured, skip"
         fi
