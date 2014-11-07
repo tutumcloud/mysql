@@ -136,6 +136,7 @@ Environment variables
 
 `MYSQL_USER`: Set a specific username for the admin account (default 'admin')
 `MYSQL_PASS`: Set a specific password for the admin account.
+`STARTUP_SQL`: Defines one or more sql scripts separated by spaces to initialize the database. Note that the scripts must be inside the conainer so you may need to mount them
 
 Compatibility Issues
 --------------------
