@@ -114,6 +114,10 @@ To import a SQL backup which is stored for example in the folder `/tmp` in the h
 
         sudo docker run -d -v /tmp:/tmp tutum/mysql /bin/bash -c "/import_sql.sh <user> <pass> /tmp/<dump.sql>"
 
+Also you can start the new database initializing it with the SQL file:
+
+        sudo docker run -d -v /path/in/host:/var/lib/mysql -e STARTUP_SQL="/tmp/<dump.sql>" tutum/mysql
+
 Where `<user>` and `<pass>` are the database username and password set earlier and `<dump.sql>` is the name of the SQL file to be imported.
 
 
@@ -135,7 +139,9 @@ Environment variables
 ---------------------
 
 `MYSQL_USER`: Set a specific username for the admin account (default 'admin')
+
 `MYSQL_PASS`: Set a specific password for the admin account.
+
 `STARTUP_SQL`: Defines one or more sql scripts separated by spaces to initialize the database. Note that the scripts must be inside the conainer so you may need to mount them
 
 Compatibility Issues
