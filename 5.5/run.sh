@@ -59,23 +59,14 @@ ImportSql()
 {
 	StartMySQL
 
-	RET=1
-	while [[ RET -ne 0 ]]; do
-	    echo "=> Waiting for confirmation of MySQL service startup"
-	    sleep 5
-	    mysql -u"${MYSQL_USER}" -p"${PASS}" -e "status" > /dev/null 2>&1
-	RET=$?
-	done
-
-	echo "   Started with PID ${PID}"
-
 	for FILE in ${STARTUP_SQL}; do
 	   echo "=> Importing SQL file ${FILE}"
-	   mysql -u"${MYSQL_USER}" -p"${PASS}" < "${FILE}"
+	   mysql -uroot < "${FILE}"
 	done
 
 	mysqladmin -uroot shutdown
 }
+
 if [ ${REPLICATION_MASTER} == "**False**" ]; then
     unset REPLICATION_MASTER
 fi
@@ -94,14 +85,15 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> Done!"  
     echo "=> Creating admin user ..."
     CreateMySQLUser
+    
+    if [ -n "${STARTUP_SQL}" ]; then
+        echo "=> Initializing DB with ${STARTUP_SQL}"
+        ImportSql
+    fi
 else
     echo "=> Using an existing volume of MySQL"
 fi
 
-if [ -n "${STARTUP_SQL}" ]; then
-    echo "=> Initializing DB with ${STARTUP_SQL}"
-    ImportSql
-fi
 
 # Set MySQL REPLICATION - MASTER
 if [ -n "${REPLICATION_MASTER}" ]; then 
