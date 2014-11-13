@@ -55,6 +55,18 @@ CreateMySQLUser()
 	mysqladmin -uroot shutdown
 }
 
+ImportSql()
+{
+	StartMySQL
+
+	for FILE in ${STARTUP_SQL}; do
+	   echo "=> Importing SQL file ${FILE}"
+	   mysql -uroot < "${FILE}"
+	done
+
+	mysqladmin -uroot shutdown
+}
+
 if [ ${REPLICATION_MASTER} == "**False**" ]; then
     unset REPLICATION_MASTER
 fi
@@ -73,6 +85,11 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> Done!"  
     echo "=> Creating admin user ..."
     CreateMySQLUser
+    
+    if [ -n "${STARTUP_SQL}" ]; then
+        echo "=> Initializing DB with ${STARTUP_SQL}"
+        ImportSql
+    fi
 else
     echo "=> Using an existing volume of MySQL"
 fi
