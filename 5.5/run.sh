@@ -147,4 +147,5 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
     fi
 fi
 
+tail -F $LOG &
 exec mysqld_safe
