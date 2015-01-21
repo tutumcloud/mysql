@@ -67,6 +67,7 @@ ImportSql()
 	mysqladmin -uroot shutdown
 }
 
+# Main
 if [ ${REPLICATION_MASTER} == "**False**" ]; then
     unset REPLICATION_MASTER
 fi
@@ -75,6 +76,7 @@ if [ ${REPLICATION_SLAVE} == "**False**" ]; then
     unset REPLICATION_SLAVE
 fi
 
+# Initialize empty data volume and create MySQL user
 if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> An empty or uninitialized MySQL volume is detected in $VOLUME_HOME"
     echo "=> Installing MySQL ..."
@@ -85,14 +87,19 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> Done!"  
     echo "=> Creating admin user ..."
     CreateMySQLUser
-
-    if [ -n "${STARTUP_SQL}" ]; then
-        echo "=> Initializing DB with ${STARTUP_SQL}"
-        ImportSql
-    fi
 else
     echo "=> Using an existing volume of MySQL"
 fi
+
+# Import Startup SQL
+if [ -n "${STARTUP_SQL}" ]; then
+    if [ ! -f /sql_imported ]; then
+        echo "=> Initializing DB with ${STARTUP_SQL}"
+        ImportSql
+        touch /sql_imported
+    fi
+fi
+
 
 # Set MySQL REPLICATION - MASTER
 if [ -n "${REPLICATION_MASTER}" ]; then 
@@ -140,4 +147,5 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
     fi
 fi
 
+tail -F $LOG &
 exec mysqld_safe
