@@ -35,12 +35,12 @@ You will see an output like the following:
             mysql -uadmin -p47nnf4FweaKu -h<host> -P<port>
 
         Please remember to change the above password as soon as possible!
-        MySQL user 'root' has no password but only allows local connections
+        MySQL user 'root' has no password but only allows local connections.
         ========================================================================
 
 In this case, `47nnf4FweaKu` is the password allocated to the `admin` user.
 
-Remember that the `root` user has no password but it's only accessible from within the container.
+Remember that the `root` user has no password, but it's only accessible from within the container.
 
 You can now test your deployment:
 
@@ -76,7 +76,7 @@ This will mount the local folder `/path/in/host` inside the docker in `/var/lib/
 
 Remember that this will mean that your host must have `/path/in/host` available when you run your docker image!
 
-After this you can start your mysql image but this time using `/path/in/host` as the database folder:
+After this you can start your MySQL image, but this time using `/path/in/host` as the database folder:
 
         docker run -d -p 3306:3306 -v /path/in/host:/var/lib/mysql tutum/mysql
 
@@ -114,7 +114,7 @@ To import a SQL backup which is stored for example in the folder `/tmp` in the h
 
         sudo docker run -d -v /tmp:/tmp tutum/mysql /bin/bash -c "/import_sql.sh <user> <pass> /tmp/<dump.sql>"
 
-Also you can start the new database initializing it with the SQL file:
+Also, you can start the new database initializing it with the SQL file:
 
         sudo docker run -d -v /path/in/host:/var/lib/mysql -e STARTUP_SQL="/tmp/<dump.sql>" tutum/mysql
 
@@ -134,17 +134,18 @@ Examples:
 - 
         docker run -d -e REPLICATION_SLAVE=true -p 3307:3306 --link mysql:mysql tutum/mysql
 
-Now, you can access port `3306` and `3307` for the master/slave mysql
+Now you can access port `3306` and `3307` for the master/slave MySQL.
+
 Environment variables
 ---------------------
 
-`MYSQL_USER`: Set a specific username for the admin account (default 'admin')
+`MYSQL_USER`: Set a specific username for the admin account (default 'admin').
 
 `MYSQL_PASS`: Set a specific password for the admin account.
 
-`STARTUP_SQL`: Defines one or more sql scripts separated by spaces to initialize the database. Note that the scripts must be inside the conainer so you may need to mount them
+`STARTUP_SQL`: Defines one or more SQL scripts separated by spaces to initialize the database. Note that the scripts must be inside the container, so you may need to mount them.
 
 Compatibility Issues
 --------------------
 
-- Volume created by MySQL 5.6 cannot be used in MySQL 5.5 Images or MariaDB images
+- Volume created by MySQL 5.6 cannot be used in MySQL 5.5 Images or MariaDB images.
