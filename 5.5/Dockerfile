@@ -25,6 +25,7 @@ RUN chmod 755 /*.sh
 # Exposed ENV
 ENV MYSQL_USER admin
 ENV MYSQL_PASS **Random**
+ENV ON_CREATE_DB **False**
 
 # Replication ENV
 ENV REPLICATION_MASTER **False**
