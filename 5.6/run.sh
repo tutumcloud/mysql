@@ -29,6 +29,16 @@ StartMySQL ()
 CreateMySQLUser()
 {
 	StartMySQL
+
+        #Setup DB
+        if ["$ON_CREATE_DB" = "**False**" ]; then
+            unset ON_CREATE_DB
+        else
+            echo "Creating MySQL database ${ON_CREATE_DB}"
+            mysql -uroot -e "CREATE DATABASE IF NOT EXISTS ${ON_CREATE_DB};"
+            echo "Database created!"
+        fi
+
 	if [ "$MYSQL_PASS" = "**Random**" ]; then
 	    unset MYSQL_PASS
 	fi
@@ -82,9 +92,9 @@ if [[ ! -d $VOLUME_HOME/mysql ]]; then
     echo "=> Installing MySQL ..."
     if [ ! -f /usr/share/mysql/my-default.cnf ] ; then
         cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
-    fi 
+    fi
     mysql_install_db > /dev/null 2>&1
-    echo "=> Done!"  
+    echo "=> Done!"
     echo "=> Creating admin user ..."
     CreateMySQLUser
 else
@@ -102,7 +112,7 @@ fi
 
 
 # Set MySQL REPLICATION - MASTER
-if [ -n "${REPLICATION_MASTER}" ]; then 
+if [ -n "${REPLICATION_MASTER}" ]; then
     echo "=> Configuring MySQL replication as master ..."
     if [ ! -f /replication_configured ]; then
         RAND="$(date +%s | rev | cut -c 1-2)$(echo ${RANDOM})"
@@ -123,7 +133,7 @@ if [ -n "${REPLICATION_MASTER}" ]; then
 fi
 
 # Set MySQL REPLICATION - SLAVE
-if [ -n "${REPLICATION_SLAVE}" ]; then 
+if [ -n "${REPLICATION_SLAVE}" ]; then
     echo "=> Configuring MySQL replication as slave ..."
     if [ -n "${MYSQL_PORT_3306_TCP_ADDR}" ] && [ -n "${MYSQL_PORT_3306_TCP_PORT}" ]; then
         if [ ! -f /replication_configured ]; then
@@ -141,7 +151,7 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
         else
             echo "=> MySQL replicaiton slave already configured, skip"
         fi
-    else 
+    else
         echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"
         exit 1
     fi

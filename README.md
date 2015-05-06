@@ -21,7 +21,7 @@ To run the image and bind to port 3306:
 
         docker run -d -p 3306:3306 tutum/mysql
 
-The first time that you run your container, a new user `admin` with all privileges 
+The first time that you run your container, a new user `admin` with all privileges
 will be created in MySQL with a random password. To get the password, check the logs
 of the container by running:
 
@@ -64,10 +64,21 @@ You can now test your deployment:
 The admin username can also be set via the `MYSQL_USER` environment variable.
 
 
+
+Creating a database on container creation
+-------------------------------------------------
+
+If you want a database to be created inside the container when you start it up
+for the first time you can set the environment variable `MYSQL_DB` to string
+that names the database.
+
+        docker run -d -p 3306:3306 -e ON_CREATE_DB="database" tutum/mysql
+
+
 Mounting the database file volume
 ---------------------------------
 
-In order to persist the database data, you can mount a local folder from the host 
+In order to persist the database data, you can mount a local folder from the host
 on the container to store the database files. To do so:
 
         docker run -d -v /path/in/host:/var/lib/mysql tutum/mysql /bin/bash -c "/usr/bin/mysql_install_db"
@@ -87,14 +98,14 @@ Mounting the database file volume from other containers
 Another way to persist the database data is to store database files in another container.
 To do so, first create a container that holds database files:
 
-    docker run -d -v /var/lib/mysql --name db_vol -p 22:22 tutum/ubuntu-trusty 
+    docker run -d -v /var/lib/mysql --name db_vol -p 22:22 tutum/ubuntu-trusty
 
-This will create a new ssh-enabled container and use its folder `/var/lib/mysql` to store MySQL database files. 
+This will create a new ssh-enabled container and use its folder `/var/lib/mysql` to store MySQL database files.
 You can specify any name of the container by using `--name` option, which will be used in next step.
 
 After this you can start your MySQL image using volumes in the container created above (put the name of container in `--volumes-from`)
 
-    docker run -d --volumes-from db_vol -p 3306:3306 tutum/mysql 
+    docker run -d --volumes-from db_vol -p 3306:3306 tutum/mysql
 
 
 Migrating an existing MySQL Server
@@ -127,11 +138,11 @@ To use MySQL replication, please set environment variable `REPLICATION_MASTER`/`
 
 Examples:
 - Master MySQL
-- 
+-
         docker run -d -e REPLICATION_MASTER=true -e REPLICATION_PASS=mypass -p 3306:3306 --name mysql tutum/mysql
 
 - Example on Slave MySQL:
-- 
+-
         docker run -d -e REPLICATION_SLAVE=true -p 3307:3306 --link mysql:mysql tutum/mysql
 
 Now you can access port `3306` and `3307` for the master/slave MySQL.
