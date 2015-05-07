@@ -31,7 +31,7 @@ CreateMySQLUser()
 	StartMySQL
 
         #Setup DB
-        if ["$ON_CREATE_DB" = "**False**" ]; then
+        if [ "$ON_CREATE_DB" = "**False**" ]; then
             unset ON_CREATE_DB
         else
             echo "Creating MySQL database ${ON_CREATE_DB}"
