@@ -71,7 +71,11 @@ ImportSql()
 
 	for FILE in ${STARTUP_SQL}; do
 	   echo "=> Importing SQL file ${FILE}"
-	   mysql -uroot < "${FILE}"
+           if [ "$ON_CREATE_DB" ]; then
+                mysql -uroot "$ON_CREATE_DB" < "${FILE}"
+           else
+                mysql -uroot < "${FILE}"
+           fi
 	done
 
 	mysqladmin -uroot shutdown
