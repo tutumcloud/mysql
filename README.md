@@ -1,6 +1,8 @@
 tutum-docker-mysql
 ==================
 
+[![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/)
+
 Base docker image to run a MySQL database server
 
 
