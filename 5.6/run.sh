@@ -102,7 +102,7 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
             sed -i "s/^#log-bin.*/log-bin = mysql-bin/" ${CONF_FILE}
             touch /replication_set.1
         else
-            echo "=> MySQL replicaiton slave already configured, skip"
+            echo "=> MySQL replication slave already configured, skip"
         fi
     else
         echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"
@@ -139,7 +139,7 @@ if [ -n "${STARTUP_SQL}" ]; then
 fi
 
 # Set MySQL REPLICATION - MASTER
-if [ -n "${REPLICATION_MASTER}" ]; then 
+if [ -n "${REPLICATION_MASTER}" ]; then
     echo "=> Configuring MySQL replication as master (2/2) ..."
     if [ ! -f /replication_set.2 ]; then
         echo "=> Creating a log user ${REPLICATION_USER}:${REPLICATION_PASS}"
@@ -154,7 +154,7 @@ if [ -n "${REPLICATION_MASTER}" ]; then
 fi
 
 # Set MySQL REPLICATION - SLAVE
-if [ -n "${REPLICATION_SLAVE}" ]; then 
+if [ -n "${REPLICATION_SLAVE}" ]; then
     echo "=> Configuring MySQL replication as slave (2/2) ..."
     if [ -n "${MYSQL_PORT_3306_TCP_ADDR}" ] && [ -n "${MYSQL_PORT_3306_TCP_PORT}" ]; then
         if [ ! -f /replication_set.2 ]; then
@@ -164,7 +164,7 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
             echo "=> Done!"
             touch /replication_set.2
         else
-            echo "=> MySQL replicaiton slave already configured, skip"
+            echo "=> MySQL replication slave already configured, skip"
         fi
     else
         echo "=> Cannot configure slave, please link it to another MySQL container with alias as 'mysql'"
