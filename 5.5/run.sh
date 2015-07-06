@@ -30,15 +30,6 @@ StartMySQL ()
 
 CreateMySQLUser()
 {
-    #Setup DB
-    if [ "$ON_CREATE_DB" = "**False**" ]; then
-        unset ON_CREATE_DB
-    else
-        echo "Creating MySQL database ${ON_CREATE_DB}"
-        mysql -uroot -e "CREATE DATABASE IF NOT EXISTS ${ON_CREATE_DB};"
-        echo "Database created!"
-    fi
-
 	if [ "$MYSQL_PASS" = "**Random**" ]; then
 	    unset MYSQL_PASS
 	fi
@@ -60,6 +51,18 @@ CreateMySQLUser()
 	echo "========================================================================"
 }
 
+OnCreateDB()
+{
+    if [ "$ON_CREATE_DB" = "**False**" ]; then
+        unset ON_CREATE_DB
+    else
+        echo "Creating MySQL database ${ON_CREATE_DB}"
+        mysql -uroot -e "CREATE DATABASE IF NOT EXISTS ${ON_CREATE_DB};"
+        echo "Database created!"
+    fi
+
+}
+
 ImportSql()
 {
 	for FILE in ${STARTUP_SQL}; do
@@ -75,6 +78,20 @@ fi
 
 if [ ${REPLICATION_SLAVE} == "**False**" ]; then
     unset REPLICATION_SLAVE
+fi
+
+# Initialize empty data volume and create MySQL user
+if [[ ! -d $VOLUME_HOME/mysql ]]; then
+    echo "=> An empty or uninitialized MySQL volume is detected in $VOLUME_HOME"
+    echo "=> Installing MySQL ..."
+    if [ ! -f /usr/share/mysql/my-default.cnf ] ; then
+        cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
+    fi
+    mysql_install_db || exit 1
+    touch /var/lib/mysql/.EMPTY_DB
+    echo "=> Done!"
+else
+    echo "=> Using an existing volume of MySQL"
 fi
 
 # Set MySQL REPLICATION - MASTER
@@ -110,24 +127,19 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
     fi
 fi
 
-# Initialize empty data volume and create MySQL user
-if [[ ! -d $VOLUME_HOME/mysql ]]; then
-    echo "=> An empty or uninitialized MySQL volume is detected in $VOLUME_HOME"
-    echo "=> Installing MySQL ..."
-    if [ ! -f /usr/share/mysql/my-default.cnf ] ; then
-        cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
-    fi
-    mysql_install_db > /dev/null 2>&1
-    echo "=> Done!"
+
+echo "=> Starting MySQL ..."
+StartMySQL
+tail -F $LOG &
+
+# Create admin user and pre create database
+if [ -f /var/lib/mysql/.EMPTY_DB ]; then
     echo "=> Creating admin user ..."
-    StartMySQL
     CreateMySQLUser
-else
-    echo "=> Using an existing volume of MySQL"
-    StartMySQL
+    OnCreateDB
+    rm /var/lib/mysql/.EMPTY_DB
 fi
 
-tail -F $LOG &
 
 # Import Startup SQL
 if [ -n "${STARTUP_SQL}" ]; then
@@ -172,4 +184,4 @@ if [ -n "${REPLICATION_SLAVE}" ]; then
     fi
 fi
 
-fg %1
+fg
