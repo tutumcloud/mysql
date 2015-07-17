@@ -71,10 +71,10 @@ Creating a database on container creation
 -------------------------------------------------
 
 If you want a database to be created inside the container when you start it up
-for the first time you can set the environment variable `ON_MYSQL_DB` to a string
+for the first time you can set the environment variable `ON_CREATE_DB` to a string
 that names the database.
 
-        docker run -d -p 3306:3306 -e ON_CREATE_DB="database" tutum/mysql
+        docker run -d -p 3306:3306 -e ON_CREATE_DB="newdatabase" tutum/mysql
 
 
 Mounting the database file volume
