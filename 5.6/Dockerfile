@@ -23,8 +23,7 @@ ENV MYSQL_USER=admin \
     REPLICATION_MASTER=**False** \
     REPLICATION_SLAVE=**False** \
     REPLICATION_USER=replica \
-    REPLICATION_PASS=replica \
-    ON_CREATE_DB=**False**
+    REPLICATION_PASS=replica
 
 # Add VOLUMEs to allow backup of config and databases
 VOLUME  ["/etc/mysql", "/var/lib/mysql"]
