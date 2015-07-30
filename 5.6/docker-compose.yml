@@ -1,0 +1,4 @@
+db:
+  image: tutum/mysql:5.6
+  environment:
+    MYSQL_PASS: "**ChangeMe**"
