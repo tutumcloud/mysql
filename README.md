@@ -76,6 +76,8 @@ that names the database.
 
         docker run -d -p 3306:3306 -e ON_CREATE_DB="newdatabase" tutum/mysql
 
+If this is combined with importing SQL files, those files will be imported into the
+created database.
 
 Mounting the database file volume
 ---------------------------------
