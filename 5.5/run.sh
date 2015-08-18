@@ -13,7 +13,7 @@ chmod 644 /etc/mysql/conf.d/mysqld_charset.cnf
 
 StartMySQL ()
 {
-    /usr/bin/mysqld_safe > /dev/null 2>&1 &
+    /usr/bin/mysqld_safe ${EXTRA_OPTS} > /dev/null 2>&1 &
     # Time out in 1 minute
     LOOP_LIMIT=60
     for (( i=0 ; ; i++ )); do
@@ -60,19 +60,18 @@ OnCreateDB()
         mysql -uroot -e "CREATE DATABASE IF NOT EXISTS ${ON_CREATE_DB};"
         echo "Database created!"
     fi
-
 }
 
 ImportSql()
 {
-	for FILE in ${STARTUP_SQL}; do
-	   echo "=> Importing SQL file ${FILE}"
-           if [ "$ON_CREATE_DB" ]; then
-                mysql -uroot "$ON_CREATE_DB" < "${FILE}"
-           else
-                mysql -uroot < "${FILE}"
-           fi
-	done
+    for FILE in ${STARTUP_SQL}; do
+	    echo "=> Importing SQL file ${FILE}"
+        if [ "$ON_CREATE_DB" ]; then
+            mysql -uroot "$ON_CREATE_DB" < "${FILE}"
+        else
+            mysql -uroot < "${FILE}"
+        fi
+    done
 }
 
 # Main

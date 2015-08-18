@@ -50,6 +50,13 @@ You can now test your deployment:
 
 Done!
 
+Passing extra configuration to start mysql server
+------------------------------------------------
+
+To pass additional settings to `mysqld`, you can use environment variable `EXTRA_OPTS`.
+For example, to run mysql using lower case table name, you can do:
+
+    docker run -d -p 3306:3306 -e EXTRA_OPTS="--lower_case_table_names=1" tutum/mysql
 
 Setting a specific password for the admin account
 -------------------------------------------------
