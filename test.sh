@@ -17,7 +17,7 @@ mysql -uuser -ptest -h127.0.0.1 -P13307 -e "show master status\G;" | grep "mysql
 mysql -uuser -ptest -h127.0.0.1 -P13308 -e "show slave status\G;" | grep "Slave_IO_Running.*Yes"
 mysql -uuser -ptest -h127.0.0.1 -P13308 -e "show slave status\G;" | grep "Slave_SQL_Running.*Yes"
 
-echo "=> Testing avolume on mysql 5.5"
+echo "=> Testing volume on mysql 5.5"
 mkdir vol55
 docker run --name mysql55.1 -d -p 13309:3306 -e MYSQL_USER="user" -e MYSQL_PASS="test" -v $(pwd)/vol55:/var/lib/mysql mysql-5.5; sleep 10
 mysqladmin -uuser -ptest -h127.0.0.1 -P13309 ping | grep -c "mysqld is alive"
