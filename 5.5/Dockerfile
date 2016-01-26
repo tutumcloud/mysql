@@ -2,8 +2,8 @@ FROM ubuntu:trusty
 MAINTAINER Fernando Mayo <fernando@tutum.co>, Feng Honglin <hfeng@tutum.co>
 
 # Add MySQL configuration
-ADD my.cnf /etc/mysql/conf.d/my.cnf
-ADD mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
+COPY my.cnf /etc/mysql/conf.d/my.cnf
+COPY mysqld_charset.cnf /etc/mysql/conf.d/mysqld_charset.cnf
 
 RUN apt-get update && \
     apt-get -yq install mysql-server-5.5 pwgen && \
@@ -14,8 +14,8 @@ RUN apt-get update && \
     touch /var/lib/mysql/.EMPTY_DB
 
 # Add MySQL scripts
-ADD import_sql.sh /import_sql.sh
-ADD run.sh /run.sh
+COPY import_sql.sh /import_sql.sh
+COPY run.sh /run.sh
 
 ENV MYSQL_USER=admin \
     MYSQL_PASS=**Random** \

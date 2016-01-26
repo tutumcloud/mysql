@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [[ $# -ne 3 ]]; then
-	echo "Usage: $0 <username> <password> </path/to/sql_file.sql>"
-	exit 1
+    echo "Usage: $0 <username> <password> </path/to/sql_file.sql>"
+    exit 1
 fi
 
 echo "=> Starting MySQL Server"
@@ -14,7 +14,7 @@ while [[ RET -ne 0 ]]; do
     echo "=> Waiting for confirmation of MySQL service startup"
     sleep 5
     mysql -u"$1" -p"$2" -e "status" > /dev/null 2>&1
-RET=$?
+    RET=$?
 done
 
 echo "   Started with PID ${PID}"
