@@ -1,6 +1,8 @@
 tutum-docker-mysql
 ==================
 
+**This image will be deprecated soon. Please use the docker official image:** https://hub.docker.com/_/mysql/
+
 [![Deploy to Tutum](https://s.tutum.co/deploy-to-tutum.svg)](https://dashboard.tutum.co/stack/deploy/)
 
 Base docker image to run a MySQL database server
